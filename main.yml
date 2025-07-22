@@ -1,0 +1,31 @@
+name: Generate and Upload YouTube Video
+
+on:
+  schedule:
+    - cron: '0 12 * * *'  # كل يوم الساعة 12 ظهراً UTC
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install ffmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+
+      - name: Generate video
+        run: node generate.js
+
+      - name: Upload to YouTube
+        run: node index.js
